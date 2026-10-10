@@ -6,7 +6,8 @@
     <title>Portofolio | Gaming & Web Developer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -53,7 +54,7 @@
                 <div class="avatar-card">
                     <div class="avatar-frame">
                         <i class="fa-solid fa-user-ninja avatar-icon"></i>
-                        <img src="assets/pp.jpeg" alt="Foto Syafiq" class="avatar-photo" onerror="this.classList.add('broken')">
+                        <img src="assets/pp.jpeg" alt="Foto Syafiq" class="avatar-photo" decoding="async" fetchpriority="high" onerror="this.classList.add('broken')">
                     </div>
                     <div class="stat-badge">
                         <i class="fa-solid fa-trophy"></i>
@@ -101,7 +102,7 @@
             <div class="gf-card">
                 <div class="gf-avatar-frame">
                     <i class="fa-solid fa-user-astronaut gf-icon"></i>
-                    <img src="assets/ppgf.jpeg" alt="Foto Girlfriend" class="avatar-photo" onerror="this.classList.add('broken')">
+                    <img src="assets/ppgf.jpeg" alt="Foto Girlfriend" class="avatar-photo" loading="lazy" decoding="async" onerror="this.classList.add('broken')">
                 </div>
                 <div class="gf-info">
                     <span class="badge-pink"><i class="fa-solid fa-sparkles"></i> Co-Op Partner</span>
@@ -230,7 +231,8 @@
                 <!-- Project 1 -->
                 <div class="project-card">
                     <div class="project-img project-preview">
-                        <iframe src="https://www.cendanakargo.com/" title="Preview Website Pengiriman Cargo" loading="lazy" tabindex="-1" scrolling="no" aria-hidden="true"></iframe>
+                        <div class="preview-fallback" aria-hidden="true"><i class="fa-solid fa-truck-fast"></i><span>cendanakargo.com</span></div>
+                        <img src="assets/cendana.png" alt="Tampilan Website Pengiriman Cargo" class="preview-img" loading="lazy" decoding="async" onerror="this.classList.add('broken')">
                     </div>
                     <div class="project-info">
                         <span class="project-tag">Web App</span>

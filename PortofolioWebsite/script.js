@@ -4,121 +4,128 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
-    
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const particleCount = width < 768 ? 22 : 45;
+    const LINK_DIST = 110;
+    const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
+    const FRAME_MS = 33;
+
+    let resizeTimer = null;
     window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }, 150);
     });
 
-    const particles = [];
-    const particleCount = Math.floor(width < 768 ? 35 : 75);
+    const mouse = { x: null, y: null, radius: 120 };
+    window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
 
-    const mouse = {
-        x: null,
-        y: null,
-        radius: 120
-    };
-
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.x;
-        mouse.y = e.y;
-    });
-
-    window.addEventListener('mouseleave', () => {
-        mouse.x = null;
-        mouse.y = null;
-    });
+    function makeGlow(color) {
+        const c = document.createElement('canvas');
+        c.width = c.height = 32;
+        const g = c.getContext('2d');
+        const grad = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+        grad.addColorStop(0, color);
+        grad.addColorStop(0.35, color);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        g.fillStyle = grad;
+        g.fillRect(0, 0, 32, 32);
+        return c;
+    }
+    const glows = { '#c77dff': makeGlow('#c77dff'), '#00f5d4': makeGlow('#00f5d4') };
 
     class Particle {
         constructor() {
             this.x = Math.random() * width;
             this.y = Math.random() * height;
             this.size = Math.random() * 2.5 + 1;
-            this.baseX = this.x;
-            this.baseY = this.y;
             this.vx = (Math.random() - 0.5) * 0.8;
             this.vy = (Math.random() - 0.5) * 0.8;
             this.color = Math.random() > 0.3 ? '#c77dff' : '#00f5d4';
         }
 
         draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = this.color;
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            const r = this.size * 3; // inti + halo
+            ctx.drawImage(glows[this.color], this.x - r, this.y - r, r * 2, r * 2);
         }
 
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
+        update(k) {
+            this.x += this.vx * k;
+            this.y += this.vy * k;
 
             if (this.x < 0 || this.x > width) this.vx *= -1;
             if (this.y < 0 || this.y > height) this.vy *= -1;
 
-            if (mouse.x != null && mouse.y != null) {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
+            if (mouse.x !== null && mouse.y !== null) {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < mouse.radius) {
-                    let forceDirectionX = dx / distance;
-                    let forceDirectionY = dy / distance;
-                    let force = (mouse.radius - distance) / mouse.radius;
-                    let directionX = forceDirectionX * force * 3;
-                    let directionY = forceDirectionY * force * 3;
-
-                    this.x -= directionX;
-                    this.y -= directionY;
+                if (distance < mouse.radius && distance > 0) {
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    this.x -= (dx / distance) * force * 3 * k;
+                    this.y -= (dy / distance) * force * 3 * k;
                 }
             }
         }
     }
 
-    function init() {
-        particles.length = 0;
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-    }
+    const particles = [];
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
     function connect() {
+        ctx.lineWidth = 1;
         for (let a = 0; a < particles.length; a++) {
-            for (let b = a; b < particles.length; b++) {
-                let dx = particles[a].x - particles[b].x;
-                let dy = particles[a].y - particles[b].y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < 110) {
-                    let opacity = 1 - (distance / 110);
+            const pa = particles[a];
+            for (let b = a + 1; b < particles.length; b++) {
+                const pb = particles[b];
+                const dx = pa.x - pb.x;
+                if (dx > LINK_DIST || dx < -LINK_DIST) continue;
+                const dy = pa.y - pb.y;
+                const d2 = dx * dx + dy * dy;
+                if (d2 < LINK_DIST_SQ) {
+                    const opacity = 1 - Math.sqrt(d2) / LINK_DIST;
                     ctx.strokeStyle = `rgba(157, 78, 221, ${opacity * 0.25})`;
-                    ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.moveTo(particles[a].x, particles[a].y);
-                    ctx.lineTo(particles[b].x, particles[b].y);
+                    ctx.moveTo(pa.x, pa.y);
+                    ctx.lineTo(pb.x, pb.y);
                     ctx.stroke();
                 }
             }
         }
     }
 
-    function animate() {
+    function drawFrame(k) {
         ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update(k);
+            particles[i].draw();
+        }
         connect();
-        requestAnimationFrame(animate);
     }
 
-    init();
-    animate();
+    if (reduceMotion) { drawFrame(0); return; }
+
+    let last = 0, rafId = 0;
+    function animate(t) {
+        rafId = requestAnimationFrame(animate);
+        const dt = t - last;
+        if (dt < FRAME_MS) return;
+        last = t;
+        drawFrame(Math.min(dt, 100) / 16.67);
+    }
+    rafId = requestAnimationFrame(animate);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAnimationFrame(rafId);
+        else { last = 0; rafId = requestAnimationFrame(animate); }
+    });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -231,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-menu a');
 
     if (navToggle && navMenu) {
-        // Toggle menu saat ikon hamburger diklik
         navToggle.addEventListener('click', () => {
             navMenu.classList.toggle('show');
             
