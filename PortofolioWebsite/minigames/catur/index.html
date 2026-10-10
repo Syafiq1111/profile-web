@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catur | Minigames Arcade</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css">
+
+    <style>
+        body {
+            background-color: #0a0813;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #0a0813; }
+        ::-webkit-scrollbar-thumb { background: #9d4edd; border-radius: 5px; box-shadow: 0 0 10px #c77dff; }
+        ::-webkit-scrollbar-thumb:hover { background: #c77dff; }
+        * { scrollbar-color: #9d4edd #0a0813; }
+
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .btn-back-nav { margin-left: auto; border-radius: 50px; padding: 6px 18px; font-size: 0.85rem; }
+
+        /* ---------- Tombol ---------- */
+        .btn-action {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            border-radius: 10px;
+            padding: 9px 14px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary-cyber { background: linear-gradient(135deg, #5a189a, #9d4edd); border: 1px solid #c77dff; color: #fff; }
+        .btn-primary-cyber:hover:not(:disabled) { color: #fff; box-shadow: 0 0 15px rgba(199, 125, 255, 0.6); }
+        .btn-teal { background: rgba(0, 245, 212, 0.12); border: 1px solid #00f5d4; color: #00f5d4; }
+        .btn-teal:hover:not(:disabled) { background: #00f5d4; color: #0a0813; box-shadow: 0 0 12px rgba(0, 245, 212, 0.5); }
+        .btn-red { background: rgba(255, 77, 109, 0.12); border: 1px solid #ff4d6d; color: #ff758f; }
+        .btn-red:hover:not(:disabled) { background: #ff4d6d; color: #fff; box-shadow: 0 0 12px rgba(255, 77, 109, 0.5); }
+        .btn-action:disabled { opacity: 0.4; }
+        .btn-action:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+        /* ---------- Papan ---------- */
+        .board-wrap { width: min(100%, 560px); margin: 0 auto; }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            aspect-ratio: 1;
+            border: 3px solid rgba(157, 78, 221, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.35);
+            container-type: inline-size;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .sq {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: var(--bg);
+            cursor: pointer;
+        }
+        .sq.light { --bg: #b9a6e8; --coord: #6a4bb0; }
+        .sq.dark  { --bg: #6a4bb0; --coord: #d9ccf7; }
+        .sq:focus-visible { outline: 3px solid #fff; outline-offset: -3px; z-index: 4; }
+
+        .sq.last::before, .sq.check::before, .sq.tip::before { content: ''; position: absolute; inset: 0; }
+        .sq.last::before  { background: rgba(255, 209, 102, 0.5); }
+        .sq.tip::before   { background: rgba(0, 245, 212, 0.45); }
+        .sq.check::before { background: radial-gradient(circle, rgba(255, 77, 109, 0.95) 0%, rgba(255, 77, 109, 0) 72%); }
+        .sq.sel { box-shadow: inset 0 0 0 4px #00f5d4; }
+
+        .sq.move::after {
+            content: '';
+            position: absolute;
+            width: 28%; height: 28%;
+            border-radius: 50%;
+            background: rgba(0, 245, 212, 0.9);
+            box-shadow: 0 0 8px rgba(0, 245, 212, 0.8);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .sq.move.cap::after {
+            width: 90%; height: 90%;
+            background: none;
+            border: 4px solid rgba(0, 245, 212, 0.9);
+            box-shadow: none;
+        }
+
+        .piece {
+            position: relative;
+            z-index: 1;
+            line-height: 1;
+            font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'Apple Symbols', 'DejaVu Sans', sans-serif;
+            font-size: min(9vw, 50px);
+            font-size: 9.6cqw;
+            pointer-events: none;
+        }
+        .piece.w { color: #ffffff; -webkit-text-stroke: 1.2px #1a1530; text-shadow: 0 2px 4px rgba(10, 8, 19, 0.6); }
+        .piece.b { color: #140f2a; -webkit-text-stroke: 1px #efe6ff; text-shadow: 0 2px 4px rgba(10, 8, 19, 0.6); }
+        .piece.pop { animation: pop 0.25s ease-out; }
+        @keyframes pop { 0% { transform: scale(0.7); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+        .coord {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--coord);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .coord.rank { top: 3px; left: 4px; }
+        .coord.file { bottom: 2px; right: 4px; }
+
+        /* ---------- Bar pemain ---------- */
+        .player-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: min(100%, 560px);
+            margin: 10px auto;
+            padding: 8px 14px;
+            background: #130f24;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 12px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-height: 52px;
+        }
+        .player-bar.active { border-color: #00f5d4; box-shadow: 0 0 14px rgba(0, 245, 212, 0.3); }
+        .player-bar .who { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; white-space: nowrap; }
+        .player-bar .who i { color: #c77dff; margin-right: 6px; }
+        .captured {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'DejaVu Sans', sans-serif;
+            font-size: 1.2rem;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+        .captured .w { color: #fff; -webkit-text-stroke: 0.6px #1a1530; }
+        .captured .b { color: #140f2a; -webkit-text-stroke: 0.6px #efe6ff; }
+        .adv { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #00f5d4; min-width: 28px; text-align: right; }
+        .spinner { color: #c77dff; }
+
+        /* ---------- Panel samping ---------- */
+        .side-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.25);
+            padding: 22px;
+        }
+        .status-box {
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-height: 3.2em;
+            padding: 12px 14px;
+            background: rgba(10, 8, 19, 0.7);
+            border: 1px solid rgba(157, 78, 221, 0.35);
+            border-radius: 12px;
+            margin-bottom: 14px;
+        }
+        .status-box.warn { color: #ff758f; border-color: #ff4d6d; }
+        .status-box.good { color: #00f5d4; border-color: #00f5d4; }
+
+        .field-label { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: #a0a0b8; margin: 4px 0 6px; display: block; }
+        .select-cyber {
+            background-color: #0a0813;
+            border: 1px solid #9d4edd;
+            color: #c77dff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+        .select-cyber:focus { background-color: #0a0813; color: #fff; border-color: #c77dff; box-shadow: 0 0 10px rgba(199, 125, 255, 0.5); outline: none; }
+
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+
+        .moves-title { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #a0a0b8; margin-bottom: 6px; }
+        .moves {
+            max-height: 230px;
+            overflow-y: auto;
+            background: rgba(10, 8, 19, 0.7);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 12px;
+            padding: 8px 10px;
+            font-size: 1.05rem;
+        }
+        .mv-row { display: grid; grid-template-columns: 2.4em 1fr 1fr; gap: 6px; padding: 2px 4px; border-radius: 6px; }
+        .mv-row:nth-child(even) { background: rgba(157, 78, 221, 0.08); }
+        .mv-n { color: #a0a0b8; }
+        .mv-cur { color: #00f5d4; font-weight: 700; }
+        .moves-empty { color: #a0a0b8; padding: 6px 4px; }
+
+        /* ---------- Overlay ---------- */
+        .overlay {
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(10, 8, 19, 0.88);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; overflow-y: auto;
+        }
+        .overlay[hidden] { display: none; }
+        .overlay-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.35);
+            padding: 28px;
+            max-width: 480px; width: 100%;
+            text-align: center;
+            margin: auto;
+        }
+        .overlay-card h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 8px; }
+        .overlay-card p { color: #a0a0b8; }
+
+        fieldset { border: 0; padding: 0; margin: 14px 0 0; }
+        legend { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #a0a0b8; text-align: left; margin-bottom: 8px; float: none; width: auto; }
+        .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+        .choice { position: relative; flex: 1 1 auto; }
+        .choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+        .choice span {
+            display: block;
+            padding: 9px 12px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.78rem;
+            color: #a0a0b8;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .choice input:checked + span { color: #fff; background: rgba(157, 78, 221, 0.35); border-color: #c77dff; box-shadow: 0 0 10px rgba(199, 125, 255, 0.4); }
+        .choice input:focus-visible + span { outline: 3px solid #fff; outline-offset: 2px; }
+        .level-desc { min-height: 1.6em; margin: 10px 0 0; font-size: 1rem; }
+
+        .promo-choices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+        .promo-btn {
+            aspect-ratio: 1;
+            font-size: 2.6rem; line-height: 1;
+            font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'DejaVu Sans', sans-serif;
+            background: #6a4bb0;
+            border: 2px solid #c77dff;
+            border-radius: 12px;
+            transition: transform 0.2s ease;
+        }
+        .promo-btn:hover { transform: scale(1.06); }
+        .promo-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+        .promo-btn.w { color: #fff; -webkit-text-stroke: 1px #1a1530; }
+        .promo-btn.b { color: #140f2a; -webkit-text-stroke: 1px #efe6ff; }
+
+        @media (max-width: 575px) {
+            .side-card { padding: 16px; }
+            .overlay-card { padding: 20px 16px; }
+            .player-bar .who { font-size: 0.75rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="../../index.html" class="logo">
+                <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+            </a>
+            <a href="../index.html" class="btn btn-outline btn-back-nav">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="container py-4 my-auto">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white display-5" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-chess-knight text-purple"></i> CATUR <span style="color: #c77dff;">ARENA</span>
+            </h1>
+            <p class="text-white-50 fs-5">Lawan bot dengan 5 tingkat kesulitan. Klik bidak, lalu klik kotak tujuan.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- PAPAN -->
+            <div class="col-lg-7">
+                <div class="player-bar" id="bar-top">
+                    <span class="who" id="who-top"></span>
+                    <span class="captured" id="cap-top" aria-hidden="true"></span>
+                    <span class="adv" id="adv-top"></span>
+                </div>
+
+                <div class="board-wrap">
+                    <div class="board" id="board" role="grid" aria-label="Papan catur"></div>
+                </div>
+
+                <div class="player-bar" id="bar-bottom">
+                    <span class="who" id="who-bottom"></span>
+                    <span class="captured" id="cap-bottom" aria-hidden="true"></span>
+                    <span class="adv" id="adv-bottom"></span>
+                </div>
+            </div>
+
+            <!-- PANEL -->
+            <div class="col-lg-5">
+                <div class="side-card">
+                    <div class="status-box" id="status" role="status" aria-live="polite">Memuat...</div>
+
+                    <label class="field-label" for="level-select">Level bot (berlaku mulai langkah bot berikutnya):</label>
+                    <select id="level-select" class="form-select select-cyber">
+                        <option value="1">1 - Pemula</option>
+                        <option value="2">2 - Mudah</option>
+                        <option value="3" selected>3 - Menengah</option>
+                        <option value="4">4 - Sulit</option>
+                        <option value="5">5 - Master</option>
+                    </select>
+
+                    <div class="btn-grid">
+                        <button class="btn btn-action btn-primary-cyber" id="btn-new"><i class="fa-solid fa-rotate me-1"></i> Game Baru</button>
+                        <button class="btn btn-action btn-teal" id="btn-hint"><i class="fa-solid fa-lightbulb me-1"></i> Petunjuk</button>
+                        <button class="btn btn-action btn-teal" id="btn-undo"><i class="fa-solid fa-rotate-left me-1"></i> Urungkan</button>
+                        <button class="btn btn-action btn-teal" id="btn-flip"><i class="fa-solid fa-retweet me-1"></i> Balik Papan</button>
+                        <button class="btn btn-action btn-red" id="btn-resign" style="grid-column: span 2;"><i class="fa-solid fa-flag me-1"></i> Menyerah</button>
+                    </div>
+
+                    <div class="moves-title">Riwayat langkah</div>
+                    <div class="moves" id="moves" tabindex="0" aria-label="Daftar langkah"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3 text-center border-top border-secondary border-opacity-10">
+        <div class="container">
+            <p>© 2026 Portofolio Developer.</p>
+        </div>
+    </footer>
+
+    <!-- OVERLAY: PENGATURAN GAME BARU -->
+    <div class="overlay" id="overlay-setup" role="dialog" aria-modal="true" aria-labelledby="setup-title" hidden>
+        <div class="overlay-card">
+            <h2 id="setup-title">Main Catur</h2>
+            <p>Atur warna dan level lawanmu.</p>
+
+            <fieldset>
+                <legend>Warna kamu</legend>
+                <div class="choices">
+                    <label class="choice"><input type="radio" name="color" value="w" checked><span>Putih</span></label>
+                    <label class="choice"><input type="radio" name="color" value="b"><span>Hitam</span></label>
+                    <label class="choice"><input type="radio" name="color" value="r"><span>Acak</span></label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Level bot</legend>
+                <div class="choices">
+                    <label class="choice"><input type="radio" name="level" value="1"><span>1 Pemula</span></label>
+                    <label class="choice"><input type="radio" name="level" value="2"><span>2 Mudah</span></label>
+                    <label class="choice"><input type="radio" name="level" value="3" checked><span>3 Menengah</span></label>
+                    <label class="choice"><input type="radio" name="level" value="4"><span>4 Sulit</span></label>
+                    <label class="choice"><input type="radio" name="level" value="5"><span>5 Master</span></label>
+                </div>
+                <p class="level-desc" id="level-desc"></p>
+            </fieldset>
+
+            <button class="btn btn-action btn-primary-cyber mt-3" id="btn-start" style="padding: 12px 28px;">
+                <i class="fa-solid fa-play me-1"></i> Mulai Main
+            </button>
+        </div>
+    </div>
+
+    <!-- OVERLAY: PROMOSI PION -->
+    <div class="overlay" id="overlay-promo" role="dialog" aria-modal="true" aria-labelledby="promo-title" hidden>
+        <div class="overlay-card">
+            <h2 id="promo-title">Promosi pion</h2>
+            <p>Pilih bidak pengganti.</p>
+            <div class="promo-choices" id="promo-choices"></div>
+        </div>
+    </div>
+
+    <!-- OVERLAY: SELESAI -->
+    <div class="overlay" id="overlay-end" role="dialog" aria-modal="true" aria-labelledby="end-title" hidden>
+        <div class="overlay-card">
+            <h2 id="end-title"></h2>
+            <p id="end-text"></p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap mt-3">
+                <button class="btn btn-action btn-primary-cyber" id="btn-again"><i class="fa-solid fa-rotate me-1"></i> Main Lagi</button>
+                <button class="btn btn-action btn-teal" id="btn-view">Lihat Papan</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../script.js"></script>
+    <script src="engine.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

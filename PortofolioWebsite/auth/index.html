@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Cyber Focus</title>
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' file:;
+        script-src 'self' file:;
+        style-src 'self' file: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com 'unsafe-inline';
+        font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+        img-src 'self' file: data:;
+        form-action 'self';
+        base-uri 'none';
+        object-src 'none';">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        body {
+            background-color: #0a0813;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CUSTOM SCROLLBAR WARNA UNGU NEON */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #0a0813; }
+        ::-webkit-scrollbar-thumb { background: #9d4edd; border-radius: 5px; box-shadow: 0 0 10px #c77dff; }
+        ::-webkit-scrollbar-thumb:hover { background: #c77dff; }
+
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .btn-back-nav { margin-left: auto; border-radius: 50px; padding: 6px 18px; font-size: 0.85rem; }
+
+        /* ---------- Kartu login ---------- */
+        .login-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.25);
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .login-icon {
+            width: 84px; height: 84px; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            font-size: 2.2rem; color: #c77dff;
+            background: linear-gradient(135deg, #1f183c, #0a0813);
+            border: 3px solid #c77dff;
+            box-shadow: inset 0 0 15px rgba(157, 78, 221, 0.5), 0 0 20px rgba(157, 78, 221, 0.35);
+        }
+
+        .field-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.78rem;
+            color: #a0a0b8;
+            margin-bottom: 6px;
+            display: block;
+            text-align: left;
+        }
+
+        .input-group-cyber .input-group-text,
+        .input-group-cyber .form-control {
+            background: #0a0813;
+            border: 1px solid #9d4edd;
+            color: #c77dff;
+        }
+        .input-group-cyber .input-group-text { border-right: 0; border-radius: 10px 0 0 10px; }
+        .input-group-cyber .form-control {
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 10px 12px;
+            border-left: 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .input-group-cyber .form-control::placeholder { color: #6f6a8c; font-weight: 500; }
+        .input-group-cyber:focus-within .input-group-text,
+        .input-group-cyber:focus-within .form-control { border-color: #c77dff; }
+        .input-group-cyber:focus-within { box-shadow: 0 0 12px rgba(199, 125, 255, 0.45); border-radius: 10px; }
+        .input-group-cyber .form-control:focus { background: #0a0813; color: #fff; box-shadow: none; outline: none; }
+        .input-group-cyber .form-control:-webkit-autofill {
+            -webkit-text-fill-color: #f8f9fa;
+            box-shadow: 0 0 0 1000px #0a0813 inset;
+            caret-color: #fff;
+        }
+
+        .form-check-input { background-color: #0a0813; border-color: #9d4edd; }
+        .form-check-input:checked { background-color: #9d4edd; border-color: #c77dff; }
+        .form-check-input:focus { box-shadow: 0 0 0 0.2rem rgba(199, 125, 255, 0.35); border-color: #c77dff; }
+
+        .btn-login {
+            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            padding: 12px 18px;
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(135deg, #5a189a, #9d4edd);
+            border: 1px solid #c77dff;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover { color: #fff; box-shadow: 0 0 25px rgba(199, 125, 255, 0.7); }
+        .btn-login:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+        .link-cyber { color: #c77dff; text-decoration: none; font-size: 1rem; transition: color 0.2s ease; }
+        .link-cyber:hover { color: #00f5d4; text-decoration: underline; }
+        .link-cyber:focus-visible { outline: 3px solid #fff; outline-offset: 2px; border-radius: 4px; }
+
+        .divider { display: flex; align-items: center; gap: 12px; color: #6f6a8c; font-size: 0.9rem; margin: 18px 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(157, 78, 221, 0.3); }
+
+        @media (max-width: 575.98px) {
+            .display-5 { font-size: 1.8rem !important; }
+            main .fs-5 { font-size: 1rem !important; }
+            .login-card { border-radius: 16px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="logo" style="cursor: default;">
+                <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+            </div>
+            <a href="../index.html" class="btn btn-outline btn-back-nav">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="container my-auto py-5">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white display-5" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-lock text-purple"></i> USER <span style="color: #c77dff;">LOGIN</span>
+            </h1>
+            <p class="text-white-50 fs-5">Masuk untuk melanjutkan ke akunmu.</p>
+        </div>
+
+        <div class="login-card p-4 p-md-5 text-center">
+            <div class="login-icon" aria-hidden="true"><i class="fa-solid fa-user-shield"></i></div>
+            <form method="post" action="#" autocomplete="on">
+
+                <!-- USERNAME -->
+                <div class="mb-3">
+                    <label class="field-label" for="username"><i class="fa-solid fa-user me-1"></i> Username atau Email</label>
+                    <div class="input-group input-group-cyber">
+                        <span class="input-group-text"><i class="fa-solid fa-at" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" id="username" name="username"
+                               placeholder="nama@email.com" maxlength="64"
+                               autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false"
+                               inputmode="email" required>
+                    </div>
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="mb-3">
+                    <label class="field-label" for="password"><i class="fa-solid fa-key me-1"></i> Kata Sandi</label>
+                    <div class="input-group input-group-cyber">
+                        <span class="input-group-text"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="Masukkan kata sandi" maxlength="128"
+                               autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"
+                               required>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+                    <div class="form-check text-start m-0">
+                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                        <label class="form-check-label text-white-50" for="remember">Ingat perangkat ini</label>
+                    </div>
+                    <a href="#" class="link-cyber">Lupa kata sandi?</a>
+                </div>
+                <button type="button" class="btn btn-login">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i> Masuk
+                </button>
+            </form>
+
+            <div class="divider">atau</div>
+
+            <p class="mb-0 text-white-50">
+                Belum punya akun?
+                <a href="#" class="link-cyber fw-bold">Buat akun</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3 text-center border-top border-secondary border-opacity-10">
+        <div class="container">
+            <p class="m-0 text-white-50 small">© 2026 Portofolio Developer. Built with <i class="fa-solid fa-heart text-purple"></i> and Gaming Spirit.</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

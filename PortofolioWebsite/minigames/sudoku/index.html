@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku | Minigames Arcade</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css">
+
+    <style>
+        body {
+            background-color: #0a0813;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #0a0813; }
+        ::-webkit-scrollbar-thumb { background: #9d4edd; border-radius: 5px; box-shadow: 0 0 10px #c77dff; }
+        ::-webkit-scrollbar-thumb:hover { background: #c77dff; }
+        * { scrollbar-color: #9d4edd #0a0813; }
+
+        .navbar-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .btn-back-nav { margin-left: auto; border-radius: 50px; padding: 6px 18px; font-size: 0.85rem; }
+
+        /* ---------- Tombol ---------- */
+        .btn-action {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.78rem;
+            border-radius: 10px;
+            padding: 10px 12px;
+            transition: all 0.25s ease;
+        }
+        .btn-primary-cyber { background: linear-gradient(135deg, #5a189a, #9d4edd); border: 1px solid #c77dff; color: #fff; }
+        .btn-primary-cyber:hover:not(:disabled) { color: #fff; box-shadow: 0 0 15px rgba(199, 125, 255, 0.6); }
+        .btn-teal { background: rgba(0, 245, 212, 0.12); border: 1px solid #00f5d4; color: #00f5d4; }
+        .btn-teal:hover:not(:disabled) { background: #00f5d4; color: #0a0813; box-shadow: 0 0 12px rgba(0, 245, 212, 0.5); }
+        .btn-teal[aria-pressed="true"] { background: #00f5d4; color: #0a0813; box-shadow: 0 0 12px rgba(0, 245, 212, 0.5); }
+        .btn-action:disabled { opacity: 0.4; }
+        .btn-action:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+        /* ---------- Papan ---------- */
+        .board-wrap { width: min(100%, 560px); margin: 0 auto; }
+
+        .sd-board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            aspect-ratio: 1;
+            border: 3px solid #c77dff;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #130f24;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.4), inset 0 0 30px rgba(157, 78, 221, 0.12);
+            container-type: inline-size;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        .sd-board.loading { opacity: 0.45; pointer-events: none; }
+
+        .cell {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+            padding: 0;
+            border: 0;
+            border-right: 1px solid rgba(157, 78, 221, 0.28);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.28);
+            border-radius: 0;
+            background: #130f24;
+            color: #00f5d4;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: min(5.2vw, 28px);
+            font-size: 5.6cqw;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.12s ease;
+        }
+        .cell.rb { border-right: 2px solid #c77dff; }
+        .cell.bb { border-bottom: 2px solid #c77dff; }
+        .cell.rl { border-right: 0; }
+        .cell.bl { border-bottom: 0; }
+        .cell.given { color: #f8f9fa; font-weight: 800; background: #1a1535; }
+
+        .cell.peer { background: rgba(157, 78, 221, 0.2); }
+        .cell.given.peer { background: rgba(157, 78, 221, 0.28); }
+        .cell.same { background: rgba(255, 209, 102, 0.28); }
+        .cell.sel  { background: rgba(0, 245, 212, 0.3); box-shadow: inset 0 0 0 2px #00f5d4, 0 0 12px rgba(0, 245, 212, 0.55); z-index: 2; }
+        .cell.hint { animation: hint-pulse 1s ease-in-out infinite; }
+        .cell.bad  { color: #ff4d6d; background: rgba(255, 77, 109, 0.22); }
+        .cell:focus-visible { outline: 3px solid #fff; outline-offset: -3px; z-index: 3; }
+
+        @keyframes hint-pulse { 50% { box-shadow: inset 0 0 0 3px #ffd166, 0 0 14px rgba(255, 209, 102, 0.7); } }
+
+        .notes {
+            position: absolute; inset: 6%;
+            display: grid;
+            grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+            font-size: 1.9cqw;
+            font-weight: 600;
+            color: #c9b3ee;
+            pointer-events: none;
+        }
+        .notes i { display: flex; align-items: center; justify-content: center; font-style: normal; }
+
+        .sd-board.won .cell { animation: win-wave 0.7s ease-in-out both; animation-delay: calc(var(--d) * 45ms); }
+        @keyframes win-wave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); background: rgba(0, 245, 212, 0.45); color: #fff; z-index: 5; }
+        }
+
+        /* ---------- Panel ---------- */
+        .side-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.25);
+            padding: 22px;
+        }
+        .status-box {
+            font-size: 1.15rem;
+            font-weight: 700;
+            min-height: 4.4em;
+            padding: 12px 14px;
+            background: rgba(10, 8, 19, 0.7);
+            border: 1px solid rgba(157, 78, 221, 0.35);
+            border-radius: 12px;
+            margin-bottom: 14px;
+        }
+        .status-box.good { color: #00f5d4; border-color: #00f5d4; }
+        .status-box.warn { color: #ff758f; border-color: #ff4d6d; }
+        .status-box.tip  { color: #ffd166; border-color: #ffd166; }
+
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+        .stat {
+            background: rgba(10, 8, 19, 0.7);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 12px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        .stat b { display: block; font-family: 'Orbitron', sans-serif; font-size: 1.15rem; color: #00f5d4; }
+        .stat span { font-size: 0.85rem; color: #a0a0b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        .progress-cyber { height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+        .progress-cyber > span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #9d4edd, #00f5d4); transition: width 0.3s ease; }
+
+        .numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+        .num-btn {
+            position: relative;
+            aspect-ratio: 1;
+            min-height: 48px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #f8f9fa;
+            background: linear-gradient(160deg, #2a2050, #1a1535);
+            border: 1px solid rgba(199, 125, 255, 0.5);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .num-btn small {
+            position: absolute; bottom: 3px; right: 6px;
+            font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 700; color: #a0a0b8;
+        }
+        .num-btn:hover:not(:disabled) { border-color: #00f5d4; box-shadow: 0 0 12px rgba(0, 245, 212, 0.45); transform: translateY(-2px); }
+        .num-btn:disabled { opacity: 0.25; }
+        .num-btn.erase { color: #ff758f; border-color: rgba(255, 77, 109, 0.5); font-size: 1.1rem; }
+        .num-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+        .notes-mode .num-btn:not(.erase) { color: #c9b3ee; font-size: 1.1rem; border-style: dashed; }
+
+        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+        .kbd-hint { color: #a0a0b8; font-size: 0.95rem; margin: 14px 0 0; }
+        .kbd-hint kbd { background: #1a1535; border: 1px solid rgba(199, 125, 255, 0.4); border-radius: 5px; padding: 0 6px; color: #c77dff; font-family: 'Orbitron', sans-serif; font-size: 0.7rem; }
+
+        /* ---------- Overlay ---------- */
+        .overlay {
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(10, 8, 19, 0.88);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; overflow-y: auto;
+        }
+        .overlay[hidden] { display: none; }
+        .overlay-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.35);
+            padding: 28px;
+            max-width: 480px; width: 100%;
+            text-align: center;
+            margin: auto;
+        }
+        .overlay-card h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 8px; }
+        .overlay-card p { color: #a0a0b8; }
+
+        fieldset { border: 0; padding: 0; margin: 14px 0 0; }
+        legend { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #a0a0b8; text-align: left; margin-bottom: 8px; float: none; width: auto; }
+        .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+        .choice { position: relative; flex: 1 1 auto; }
+        .choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+        .choice span {
+            display: block; padding: 9px 12px; text-align: center;
+            font-family: 'Orbitron', sans-serif; font-size: 0.78rem; color: #a0a0b8;
+            border: 1px solid rgba(199, 125, 255, 0.3); border-radius: 10px; transition: all 0.2s ease;
+        }
+        .choice input:checked + span { color: #fff; background: rgba(157, 78, 221, 0.35); border-color: #c77dff; box-shadow: 0 0 10px rgba(199, 125, 255, 0.4); }
+        .choice input:focus-visible + span { outline: 3px solid #fff; outline-offset: 2px; }
+        .level-desc { min-height: 3em; margin: 10px 0 0; font-size: 1.02rem; }
+
+        .rule { display: flex; align-items: flex-start; gap: 10px; text-align: left; color: #d8d8e8; margin-top: 8px; cursor: pointer; }
+        .rule input { margin-top: 6px; accent-color: #9d4edd; width: 18px; height: 18px; flex: 0 0 auto; }
+        .rule small { display: block; color: #a0a0b8; }
+
+        .result-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+
+        button { touch-action: manipulation; }
+
+        .board-wrap { position: relative; }
+        .kbd-input {
+            position: absolute; top: 0; left: 0; width: 1px; height: 1px;
+            opacity: 0; border: 0; padding: 0; margin: 0; background: transparent;
+            font-size: 16px; /* mencegah zoom otomatis di iOS */
+            caret-color: transparent; pointer-events: none;
+        }
+
+        .mini-bar { display: none; }
+        .stat.danger { border-color: #ff4d6d; }
+        .stat.danger b { color: #ff4d6d; }
+
+        /* ---------- Batas kesalahan ---------- */
+        .max-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .chip {
+            flex: 1 1 auto; padding: 9px 12px; text-align: center;
+            font-family: 'Orbitron', sans-serif; font-size: 0.78rem; color: #a0a0b8;
+            background: transparent; border: 1px solid rgba(199, 125, 255, 0.3); border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .chip:hover:not(:disabled) { color: #fff; border-color: #c77dff; }
+        .chip[aria-pressed="true"] { color: #fff; background: rgba(157, 78, 221, 0.35); border-color: #c77dff; box-shadow: 0 0 10px rgba(199, 125, 255, 0.4); }
+        .chip:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+        .max-input {
+            width: 84px; background: #0a0813; border: 1px solid #9d4edd; color: #c77dff;
+            font-family: 'Orbitron', sans-serif; font-size: 1rem; text-align: center;
+            border-radius: 10px; padding: 7px; -moz-appearance: textfield;
+        }
+        .max-input::-webkit-outer-spin-button, .max-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .max-input:focus { color: #fff; border-color: #c77dff; box-shadow: 0 0 10px rgba(199, 125, 255, 0.5); outline: none; }
+        .max-block.off { opacity: 0.4; pointer-events: none; }
+
+        /* ---------- Umpan balik salah / kalah ---------- */
+        .sd-board.shake { animation: shake 0.35s ease; }
+        @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+        .sd-board.lost { border-color: #ff4d6d; box-shadow: 0 0 30px rgba(255, 77, 109, 0.45), inset 0 0 30px rgba(255, 77, 109, 0.12); }
+
+        @media (max-width: 991.98px) {
+            .mini-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: min(100%, 560px); margin: 0 auto 10px; }
+            .mini-bar .stat b { font-size: 1.05rem; }
+            .side-card .stats { display: none; }
+            .kbd-hint { display: none; }
+        }
+        @media (max-width: 575px) {
+            main.container { padding-top: 0.5rem !important; }
+            .display-5 { font-size: 1.8rem !important; }
+            main .fs-5 { font-size: 1rem !important; }
+            .side-card { padding: 14px; border-radius: 16px; }
+            .overlay-card { padding: 20px 16px; }
+            .status-box { font-size: 1rem; min-height: 3.6em; padding: 10px 12px; }
+            .num-btn { min-height: 46px; font-size: 1.25rem; }
+            .btn-action { font-size: 0.72rem; padding: 12px 8px; }
+            .notes { inset: 4%; font-size: 2.5cqw; }
+            .sd-board { border-width: 2px; border-radius: 10px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="../../index.html" class="logo">
+                <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+            </a>
+            <a href="../index.html" class="btn btn-outline btn-back-nav">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="container py-4 my-auto">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white display-5" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-table-cells text-purple"></i> SUDOKU <span style="color: #c77dff;">ARENA</span>
+            </h1>
+            <p class="text-white-50 fs-5">Isi setiap baris, kolom, dan kotak 3x3 dengan angka 1 sampai 9 tanpa pengulangan.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- PAPAN -->
+            <div class="col-lg-7">
+                <div class="mini-bar" aria-hidden="true">
+                    <div class="stat"><b id="mini-time">00:00</b><span>Waktu</span></div>
+                    <div class="stat" id="mini-miss-box"><b id="mini-miss">0</b><span>Salah</span></div>
+                    <div class="stat"><b id="mini-hint">0</b><span>Petunjuk</span></div>
+                </div>
+                <div class="board-wrap">
+                    <div class="sd-board" id="board" aria-label="Papan Sudoku 9 kali 9"></div>
+                    <input type="text" id="kbd-input" class="kbd-input" inputmode="numeric" enterkeyhint="done"
+                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                           aria-label="Input angka dari keyboard" tabindex="-1">
+                </div>
+            </div>
+
+            <!-- PANEL -->
+            <div class="col-lg-5">
+                <div class="side-card" id="panel">
+                    <div class="status-box" id="status" role="status" aria-live="polite">Memuat...</div>
+
+                    <div class="stats">
+                        <div class="stat"><b id="stat-time">00:00</b><span>Waktu</span></div>
+                        <div class="stat" id="stat-miss-box"><b id="stat-miss">0</b><span>Salah</span></div>
+                        <div class="stat"><b id="stat-hint">0</b><span>Petunjuk</span></div>
+                    </div>
+                    <div class="progress-cyber" role="progressbar" aria-label="Progres pengisian" aria-valuemin="0" aria-valuemax="81" id="progress">
+                        <span id="progress-bar"></span>
+                    </div>
+
+                    <div class="numpad" id="numpad"></div>
+
+                    <div class="btn-grid">
+                        <button class="btn btn-action btn-teal" id="btn-notes" aria-pressed="false"><i class="fa-solid fa-pencil me-1"></i> Catatan: Mati</button>
+                        <button class="btn btn-action btn-teal" id="btn-undo"><i class="fa-solid fa-rotate-left me-1"></i> Urungkan</button>
+                        <button class="btn btn-action btn-teal" id="btn-hint"><i class="fa-solid fa-lightbulb me-1"></i> Petunjuk</button>
+                        <button class="btn btn-action btn-primary-cyber" id="btn-new"><i class="fa-solid fa-rotate me-1"></i> Game Baru</button>
+                        <button class="btn btn-action btn-teal" id="btn-kbd" aria-pressed="false" style="grid-column: 1 / -1;"><i class="fa-solid fa-keyboard me-1"></i> Keyboard HP: Mati</button>
+                    </div>
+
+                    <p class="kbd-hint">
+                        Keyboard: <kbd>1-9</kbd> isi, <kbd>Del</kbd> hapus, <kbd>N</kbd> catatan, <kbd>H</kbd> petunjuk, <kbd>Ctrl+Z</kbd> urungkan, tombol panah untuk pindah kotak.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3 text-center border-top border-secondary border-opacity-10">
+        <div class="container">
+            <p>© 2026 Portofolio Developer.</p>
+        </div>
+    </footer>
+
+    <!-- OVERLAY: PENGATURAN -->
+    <div class="overlay" id="overlay-setup" role="dialog" aria-modal="true" aria-labelledby="setup-title" hidden>
+        <div class="overlay-card">
+            <h2 id="setup-title">Main Sudoku</h2>
+            <p>Pilih level puzzle yang ingin kamu selesaikan.</p>
+
+            <fieldset>
+                <legend>Level</legend>
+                <div class="choices">
+                    <label class="choice"><input type="radio" name="level" value="1"><span>1 Pemula</span></label>
+                    <label class="choice"><input type="radio" name="level" value="2"><span>2 Mudah</span></label>
+                    <label class="choice"><input type="radio" name="level" value="3" checked><span>3 Menengah</span></label>
+                    <label class="choice"><input type="radio" name="level" value="4"><span>4 Sulit</span></label>
+                    <label class="choice"><input type="radio" name="level" value="5"><span>5 Master</span></label>
+                </div>
+                <p class="level-desc" id="level-desc"></p>
+            </fieldset>
+
+            <label class="rule"><input type="checkbox" id="opt-check" checked>
+                <span>Tandai kesalahan otomatis<small>Angka yang salah langsung berwarna merah dan dihitung.</small></span></label>
+
+            <fieldset class="max-block" id="max-block">
+                <legend>Batas kesalahan</legend>
+                <div class="max-row">
+                    <button type="button" class="chip" data-v="0" aria-pressed="false">Tanpa batas</button>
+                    <button type="button" class="chip" data-v="1" aria-pressed="false">1</button>
+                    <button type="button" class="chip" data-v="3" aria-pressed="true">3</button>
+                    <button type="button" class="chip" data-v="5" aria-pressed="false">5</button>
+                    <button type="button" class="chip" data-v="10" aria-pressed="false">10</button>
+                    <input type="number" id="opt-max" class="max-input" min="0" max="99" step="1" value="3" inputmode="numeric" aria-label="Maksimal kesalahan (0 berarti tanpa batas)">
+                </div>
+                <p class="level-desc" id="max-desc"></p>
+            </fieldset>
+
+            <button class="btn btn-action btn-primary-cyber mt-4" id="btn-start" style="padding: 12px 28px;">
+                <i class="fa-solid fa-play me-1"></i> Mulai Main
+            </button>
+        </div>
+    </div>
+
+    <!-- OVERLAY: MENANG -->
+    <div class="overlay" id="overlay-win" role="dialog" aria-modal="true" aria-labelledby="win-title" hidden>
+        <div class="overlay-card">
+            <h2 id="win-title"><i class="fa-solid fa-trophy" style="color: #ffd166;"></i> Selesai!</h2>
+            <p id="win-text"></p>
+            <div class="result-stats">
+                <div class="stat"><b id="win-time">00:00</b><span>Waktu</span></div>
+                <div class="stat"><b id="win-miss">0</b><span>Salah</span></div>
+                <div class="stat"><b id="win-hint">0</b><span>Petunjuk</span></div>
+            </div>
+            <div class="d-flex gap-2 justify-content-center flex-wrap mt-4">
+                <button class="btn btn-action btn-primary-cyber" id="btn-again"><i class="fa-solid fa-rotate me-1"></i> Main Lagi</button>
+                <button class="btn btn-action btn-teal" id="btn-view">Lihat Papan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY: KALAH -->
+    <div class="overlay" id="overlay-lose" role="dialog" aria-modal="true" aria-labelledby="lose-title" hidden>
+        <div class="overlay-card">
+            <h2 id="lose-title"><i class="fa-solid fa-heart-crack" style="color: #ff4d6d;"></i> Game Over</h2>
+            <p id="lose-text"></p>
+            <div class="result-stats">
+                <div class="stat"><b id="lose-time">00:00</b><span>Waktu</span></div>
+                <div class="stat"><b id="lose-miss">0</b><span>Salah</span></div>
+                <div class="stat"><b id="lose-fill">0%</b><span>Terisi</span></div>
+            </div>
+            <div class="d-flex gap-2 justify-content-center flex-wrap mt-4">
+                <button class="btn btn-action btn-primary-cyber" id="btn-retry"><i class="fa-solid fa-rotate me-1"></i> Main Lagi</button>
+                <button class="btn btn-action btn-teal" id="btn-lose-view">Lihat Papan</button>
+            </div>
+        </div>
+    </div>
+    <script src="../../script.js"></script>
+    <script src="engine.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

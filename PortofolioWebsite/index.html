@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio | Gaming & Web Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container navbar-content">
+        <a href="auth/index.html" class="logo">
+            <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+        </a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <ul class="nav-menu" id="nav-menu">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#about">Tentang</a></li>
+            <li><a href="#gf">Girlfriend</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#features">Fitur</a></li>
+            <li><a href="#projects">Proyek</a></li>
+            <li><a href="#contact">Kontak</a></li>
+        </ul>
+    </div>
+</nav>
+    <!-- HERO SECTION -->
+    <header id="home" class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <div class="badge-status">
+                    <span class="status-dot"></span> Available for Level Up
+                </div>
+                <h1>Halo, Saya <span class="text-gradient">Syafiq</span></h1>
+                <p class="subtitle">Web Developer & Gaming Enthusiast</p>
+                <p class="desc">
+                    Membangun pengalaman web yang modern, interaktif, dan berfokus pada performa layaknya game AAA.
+                </p>
+                <div class="hero-btns">
+                    <a href="#projects" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> Lihat Proyek</a>
+                    <a href="album/index.html" class="btn btn-outline"><i class="fa-solid fa-images"></i> Buka Album</a>
+                </div>
+            </div>
+            <div class="hero-avatar">
+                <div class="avatar-card">
+                    <div class="avatar-frame">
+                        <i class="fa-solid fa-user-ninja avatar-icon"></i>
+                        <img src="assets/pp.jpeg" alt="Foto Syafiq" class="avatar-photo" onerror="this.classList.add('broken')">
+                    </div>
+                    <div class="stat-badge">
+                        <i class="fa-solid fa-trophy"></i>
+                        <div>
+                            <h4>LEVEL 0</h4>
+                            <p>Junior Web Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ABOUT SECTION -->
+        <section id="about" class="container section">
+            <h2 class="section-title"><i class="fa-solid fa-shield-halved"></i> Tentang <span>Saya</span></h2>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3><i class="fa-solid fa-terminal"></i> Misi Utama</h3>
+                    <p>
+                        Saya adalah seorang pengembang web dan juga seorang mahasiswa S1 Informatika yang menyukai konsep visual dan user experience yang tajam. Selalu siap mengeksekusi tantangan coding terutama website layaknya menyelesaikan quest tersulit.
+                    </p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-box">
+                        <h2>5+</h2>
+                        <p>Proyek Selesai</p>
+                    </div>
+                    <div class="stat-box">
+                        <h2>5+</h2>
+                        <p>Tahun Pengalaman SMK - Kuliah</p>
+                    </div>
+                    <div class="stat-box">
+                        <h2>100%</h2>
+                        <p>Commit Rate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GIRLFRIEND -->
+        <section id="gf" class="container section">
+            <h2 class="section-title"><i class="fa-solid fa-heart text-pink"></i> Special <span>Partner</span></h2>
+            <div class="gf-card">
+                <div class="gf-avatar-frame">
+                    <i class="fa-solid fa-user-astronaut gf-icon"></i>
+                    <img src="assets/ppgf.jpeg" alt="Foto Girlfriend" class="avatar-photo" onerror="this.classList.add('broken')">
+                </div>
+                <div class="gf-info">
+                    <span class="badge-pink"><i class="fa-solid fa-sparkles"></i> Co-Op Partner</span>
+                    <h3>My Beloved Girlfriend</h3>
+                    <p class="gf-desc">
+                        Support sistem terbaik di setiap langkah kehidupan. Sosok yang selalu memberikan dorongan moral, inspirasi, dan kebahagiaan di tengah padatnya aktivitas setiap hari.
+                    </p>
+                    <div class="gf-stats">
+                        <div class="gf-stat-item">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                            <span>100% Support</span>
+                        </div>
+                        <div class="gf-stat-item">
+                            <i class="fa-solid fa-infinity"></i>
+                            <span>Infinite Chemistry</span>
+                        </div>
+                    </div>
+                        <a href="album/index.html?filter=girlfriend" class="btn btn-pink mt-3">
+                            <i class="fa-solid fa-images"></i> Lihat Galeri Kenangan
+                        </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section id="skills" class="full-width-section">
+            <div class="container">
+                <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Skill <span>Tree</span></h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <i class="fa-brands fa-html5 skill-icon"></i>
+                        <h3>HTML5 & CSS3</h3>
+                        <p>Struktur & Styling Responsif</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-brands fa-js skill-icon"></i>
+                        <h3>JavaScript</h3>
+                        <p>Interaktivitas & Logika Web</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-brands fa-python skill-icon"></i>
+                        <h3>Python</h3>
+                        <p>Data Mining & AI Logic</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-solid fa-code skill-icon"></i>
+                        <h3>C++</h3>
+                        <p>Data Structures & Logic</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-brands fa-java skill-icon"></i>
+                        <h3>Java</h3>
+                        <p>Desktop & OOP Apps</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-solid fa-mobile-screen-button skill-icon"></i>
+                        <h3>Dart</h3>
+                        <p>Flutter Mobile Apps</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-brands fa-php skill-icon"></i>
+                        <h3>PHP & MySQL</h3>
+                        <p>Backend & Database</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-brands fa-bootstrap skill-icon"></i>
+                        <h3>Bootstrap</h3>
+                        <p>UI Framework</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-solid fa-file-word skill-icon text-purple"></i>
+                        <h3>Microsoft Word</h3>
+                        <p>Dokumentasi & Penulisan Laporan</p>
+                    </div>
+                    <div class="skill-card">
+                        <i class="fa-solid fa-file-excel skill-icon text-purple"></i>
+                        <h3>Microsoft Excel</h3>
+                        <p>Analisis Data & Spreadsheet</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FITUR & MINI APPS SECTION -->
+        <section id="features" class="container section">
+            <h2 class="section-title"><i class="fa-solid fa-cubes"></i> Fitur <span>& Apps</span></h2>
+            <div class="features-grid">
+                <!-- Fitur 1: Timer Pomodoro -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                    <h3>Timer Pomodoro</h3>
+                    <p>Alat manajemen waktu produktivitas untuk fokus belajar dan kegiatan dengan teknik Pomodoro.</p>
+                    <a href="timer_pomodoro/index.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-clock"></i> Buka Timer</a>
+                </div>
+
+                <!-- Fitur 2: Minigames Arcade -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-gamepad"></i></div>
+                    <h3>Minigames Arcade</h3>
+                    <p>Kumpulan mini games interaktif seru untuk melatih fokus dan mengisi waktu luang.</p>
+                    <a href="minigames/index.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-play"></i> Mainkan Game</a>
+                </div>
+
+                <!-- Fitur 3: QR Code Generator -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-qrcode"></i></div>
+                    <h3>Pembuat QR Code</h3>
+                    <p>Generator instan untuk mengubah link URL atau teks menjadi kode QR siap pakai.</p>
+                    <a href="create_qrcode/index.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Buat QR Code</a>
+                </div>
+
+                <!-- Fitur 4: Penghitung Kata -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-font"></i></div>
+                    <h3>Penghitung Kata</h3>
+                    <p>Alat bantu analisa teks cepat untuk menghitung jumlah kata, karakter, dan estimasi waktu baca serta dilengkapi dengan penerjemah Inggris-Indonesia.</p>
+                    <a href="penghitung_kata/index.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-calculator"></i> Buka Counter</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="container section">
+            <h2 class="section-title"><i class="fa-solid fa-code"></i> Proyek <span>Terbaru</span></h2>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="project-img project-preview">
+                        <iframe src="https://www.cendanakargo.com/" title="Preview Website Pengiriman Cargo" loading="lazy" tabindex="-1" scrolling="no" aria-hidden="true"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-tag">Web App</span>
+                        <h3>Website Pengiriman Cargo</h3>
+                        <p>Sistem pengiriman barang berbasis web yang efisien dan mudah digunakan.</p>
+                        <div class="project-links">
+                            <a href="https://www.cendanakargo.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> Kunjungi Website</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="project-img project-visual">
+                        <svg id="cluster-art" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ilustrasi hasil clustering K-Means dan DBSCAN"></svg>
+                        <span class="visual-label">K-Means &bull; DBSCAN</span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-tag">Data Science</span>
+                        <h3>Clustering Analysis</h3>
+                        <p>Implementasi algoritma K-Means dan DBSCAN untuk analisis kepadatan kendaraan.</p>
+                        <div class="project-links">
+                            <a href="https://jurnal.pustakagalerimandiri.co.id/index.php/pustakadata/article/view/1900/1299" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> Baca Jurnal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="container section">
+            <div class="contact-box">
+                <h2><i class="fa-solid fa-headset"></i> Mulai <span>Multiplayer Co-Op?</span></h2>
+                <p>Punya ide proyek menarik atau ingin berkolaborasi? Mari terhubung!</p>
+                <div class="contact-socials">
+                    <a href="https://github.com/Syafiq1111" class="social-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="https://www.instagram.com/syafiqhfz._/" target="_blank" rel="noopener noreferrer" class="social-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Portofolio Developer.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

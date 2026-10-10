@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penghitung Kata & Penerjemah | Cyber Text Tools</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        body {
+            background-color: #0a0813;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .btn-back-nav {
+            margin-left: auto;
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 0.85rem;
+        }
+
+        .counter-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.25);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .textarea-cyber {
+            background: #0a0813;
+            border: 1px solid #9d4edd;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            border-radius: 12px;
+            padding: 20px;
+            resize: vertical;
+            width: 100%;
+        }
+
+        .textarea-cyber:focus {
+            background: #0a0813;
+            color: #fff;
+            border-color: #c77dff;
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.4);
+            outline: none;
+        }
+
+        .stat-box-cyber {
+            background: rgba(10, 8, 19, 0.6);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box-cyber:hover {
+            border-color: #c77dff;
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #00f5d4;
+            text-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a0a0b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .btn-action {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear {
+            background: rgba(255, 77, 109, 0.15);
+            border: 1px solid #ff4d6d;
+            color: #ff758f;
+        }
+
+        .btn-clear:hover {
+            background: #ff4d6d;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255, 77, 109, 0.5);
+        }
+
+        .btn-copy {
+            background: rgba(0, 245, 212, 0.15);
+            border: 1px solid #00f5d4;
+            color: #00f5d4;
+        }
+
+        .btn-copy:hover {
+            background: #00f5d4;
+            color: #0a0813;
+            box-shadow: 0 0 12px rgba(0, 245, 212, 0.5);
+        }
+
+        .btn-translate {
+            background: linear-gradient(135deg, #5a189a, #9d4edd);
+            border: 1px solid #c77dff;
+            color: #fff;
+        }
+
+        .btn-translate:hover {
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.6);
+            color: #fff;
+        }
+
+        .select-cyber {
+            background: #0a0813;
+            border: 1px solid #9d4edd;
+            color: #c77dff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+
+        .select-cyber:focus {
+            background: #0a0813;
+            color: #fff;
+            border-color: #c77dff;
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.5);
+            outline: none;
+        }
+
+        .textarea-cyber::-webkit-scrollbar, ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .textarea-cyber::-webkit-scrollbar-track, ::-webkit-scrollbar-track {
+            background: #0a0813;
+        }
+
+        .textarea-cyber::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
+            background: #9d4edd;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="logo" style="cursor: default;">
+                <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+            </div>
+            <a href="../index.html#features" class="btn btn-outline btn-back-nav">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="container my-auto py-5">
+        
+        <!-- SECTION 1: PENGHITUNG KATA MANDIRI -->
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white display-5" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-font text-purple"></i> PENGHITUNG <span style="color: #c77dff;">KATA</span>
+            </h1>
+            <p class="text-white-50 fs-5">Analisis jumlah kata, karakter, paragraf, dan estimasi waktu baca secara instan.</p>
+        </div>
+
+        <div class="counter-card p-4 p-md-5 mb-5">
+            <!-- STATS -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="stat-box-cyber">
+                        <div class="stat-number" id="word-count">0</div>
+                        <div class="stat-label"><i class="fa-solid fa-file-lines me-1"></i> Kata</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-box-cyber">
+                        <div class="stat-number" id="char-count">0</div>
+                        <div class="stat-label"><i class="fa-solid fa-font me-1"></i> Karakter</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-box-cyber">
+                        <div class="stat-number" id="para-count">0</div>
+                        <div class="stat-label"><i class="fa-solid fa-paragraph me-1"></i> Paragraf</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-box-cyber">
+                        <div class="stat-number" id="read-time" style="color: #c77dff;">0s</div>
+                        <div class="stat-label"><i class="fa-solid fa-clock me-1"></i> Est. Baca</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEXTAREA INPUT PENGHITUNG KATA -->
+            <div class="mb-3">
+                <textarea id="counter-input" class="form-control textarea-cyber" style="min-height: 450px;" placeholder="Ketik atau tempel (paste) teks yang ingin dihitung di sini..."></textarea>
+            </div>
+
+            <!-- AKSI PENGHITUNG KATA -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span class="text-white-50 small" id="char-no-space-count">Karakter (tanpa spasi): 0</span>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-action btn-copy" onclick="copyText('counter-input')">
+                        <i class="fa-solid fa-copy me-1"></i> Salin Teks
+                    </button>
+                    <button class="btn btn-action btn-clear" onclick="clearCounterText()">
+                        <i class="fa-solid fa-trash me-1"></i> Bersihkan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PENERJEMAH TEKS MANDIRI -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-white display-6" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-language text-purple"></i> PENERJEMAH <span style="color: #c77dff;">TEKS</span>
+            </h2>
+            <p class="text-white-50 fs-5">Terjemahkan teks antara Bahasa Indonesia dan Inggris dengan cepat.</p>
+        </div>
+
+        <div class="counter-card p-4 p-md-5">
+            <!-- PENGATURAN BAHASA & TOMBOL -->
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+                <select id="lang-pair" class="form-select select-cyber" style="max-width: 250px;">
+                    <option value="id|en">Indonesia ➔ Inggris</option>
+                    <option value="en|id">Inggris ➔ Indonesia</option>
+                </select>
+                <button class="btn btn-action btn-translate" id="btn-translate" onclick="translateText()">
+                    <i class="fa-solid fa-bolt me-1"></i> Terjemahkan
+                </button>
+            </div>
+
+            <!-- 2 BOX TEXTAREA TERPISAH (INPUT & OUTPUT) -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label text-white-50 small" style="font-family: 'Orbitron', sans-serif;">Teks Asal:</label>
+                    <textarea id="translate-input" class="form-control textarea-cyber" style="min-height: 250px;" placeholder="Ketik teks yang ingin diterjemahkan..."></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-white-50 small" style="font-family: 'Orbitron', sans-serif;">Hasil Terjemahan:</label>
+                    <textarea id="translate-output" class="form-control textarea-cyber" style="min-height: 250px;" readonly placeholder="Hasil terjemahan akan muncul di sini..."></textarea>
+                </div>
+            </div>
+
+            <!-- AKSI TERJEMAHAN -->
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-action btn-copy" onclick="copyText('translate-output')">
+                    <i class="fa-solid fa-copy me-1"></i> Salin Hasil
+                </button>
+                <button class="btn btn-action btn-clear" onclick="clearTranslateText()">
+                    <i class="fa-solid fa-trash me-1"></i> Bersihkan
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3 text-center border-top border-secondary border-opacity-10">
+        <div class="container">
+            <p>© 2026 Portofolio Developer.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

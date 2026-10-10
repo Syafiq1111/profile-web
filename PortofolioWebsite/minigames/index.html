@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minigames Arcade | Cyber Text Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        body {
+            background-color: #0a0813;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .btn-back-nav {
+            margin-left: auto;
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 0.85rem;
+        }
+
+        .game-card {
+            --accent: #c77dff;
+            --accent-soft: rgba(199, 125, 255, 0.15);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #130f24;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px var(--accent-soft);
+        }
+
+        .game-cover {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1c1735, #0a0813);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.15);
+        }
+
+        .game-cover i {
+            font-size: 4rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 12px var(--accent));
+        }
+
+        .game-body {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .game-desc {
+            color: #a0a0b8;
+            font-size: 1rem;
+            margin-bottom: 14px;
+        }
+
+        .game-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .game-chip {
+            font-size: 0.8rem;
+            color: var(--accent);
+            background: var(--accent-soft);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            padding: 2px 10px;
+        }
+
+        .btn-play {
+            margin-top: auto;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 10px 18px;
+            color: #fff;
+            background: linear-gradient(135deg, #5a189a, #9d4edd);
+            border: 1px solid #c77dff;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-play:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.6);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0813; }
+        ::-webkit-scrollbar-thumb { background: #9d4edd; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="../index.html" class="logo">
+                <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+            </a>
+            <a href="../index.html#features" class="btn btn-outline btn-back-nav">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="container my-auto py-5">
+
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-white display-5" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-gamepad text-purple"></i> MINIGAMES <span style="color: #c77dff;">ARCADE</span>
+            </h1>
+            <p class="text-white-50 fs-5">Pilih satu game untuk mengisi waktu luang atau melatih fokus.</p>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Game 1: Ular Tangga -->
+            <div class="col-md-6 col-lg-4">
+                <article class="game-card" style="--accent: #00f5d4; --accent-soft: rgba(0, 245, 212, 0.15);">
+                    <div class="game-cover"><i class="fa-solid fa-dice" aria-hidden="true"></i></div>
+                    <div class="game-body">
+                        <h2 class="game-title">Ular Tangga</h2>
+                        <p class="game-desc">Lempar dadu, naiki tangga, dan hindari ular untuk sampai ke kotak terakhir lebih dulu.</p>
+                        <div class="game-meta">
+                            <span class="game-chip"><i class="fa-solid fa-robot me-1"></i> Lawan 1-3 bot</span>
+                            <span class="game-chip"><i class="fa-solid fa-hourglass-half me-1"></i> Santai</span>
+                        </div>
+                        <a href="ular_tangga/index.html" class="btn btn-play"><i class="fa-solid fa-play me-1"></i> Main Sekarang</a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Game 2: Tic Tac Toe -->
+            <div class="col-md-6 col-lg-4">
+                <article class="game-card" style="--accent: #c77dff; --accent-soft: rgba(199, 125, 255, 0.15);">
+                    <div class="game-cover"><i class="fa-solid fa-xmark" aria-hidden="true"></i></div>
+                    <div class="game-body">
+                        <h2 class="game-title">Tic Tac Toe</h2>
+                        <p class="game-desc">Susun tiga simbol berurutan di papan 3x3 sebelum lawanmu melakukannya.</p>
+                        <div class="game-meta">
+                            <span class="game-chip"><i class="fa-solid fa-users me-1"></i> 2 pemain</span>
+                            <span class="game-chip"><i class="fa-solid fa-hourglass-half me-1"></i> Cepat</span>
+                        </div>
+                        <a href="tictactoe/index.html" class="btn btn-play"><i class="fa-solid fa-play me-1"></i> Main Sekarang</a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Game 3: Catur -->
+            <div class="col-md-6 col-lg-4">
+                <article class="game-card" style="--accent: #ffd166; --accent-soft: rgba(255, 209, 102, 0.15);">
+                    <div class="game-cover"><i class="fa-solid fa-chess-knight" aria-hidden="true"></i></div>
+                    <div class="game-body">
+                        <h2 class="game-title">Catur</h2>
+                        <p class="game-desc">Atur strategi, gerakkan bidak, dan skakmat raja bot. Pilih sendiri level kesulitannya.</p>
+                        <div class="game-meta">
+                            <span class="game-chip"><i class="fa-solid fa-robot me-1"></i> Lawan bot</span>
+                            <span class="game-chip"><i class="fa-solid fa-signal me-1"></i> 5 level</span>
+                        </div>
+                        <a href="catur/index.html" class="btn btn-play"><i class="fa-solid fa-play me-1"></i> Main Sekarang</a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Game 4: UNO -->
+            <div class="col-md-6 col-lg-4">
+                <article class="game-card" style="--accent: #ff4d6d; --accent-soft: rgba(255, 77, 109, 0.15);">
+                    <div class="game-cover"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></div>
+                    <div class="game-body">
+                        <h2 class="game-title">UNO</h2>
+                        <p class="game-desc">Habiskan kartu di tanganmu lebih dulu dengan mencocokkan warna atau angka.</p>
+                        <div class="game-meta">
+                            <span class="game-chip"><i class="fa-solid fa-users me-1"></i> 2-4 pemain</span>
+                            <span class="game-chip"><i class="fa-solid fa-hourglass-half me-1"></i> Seru</span>
+                        </div>
+                        <a href="uno/index.html" class="btn btn-play"><i class="fa-solid fa-play me-1"></i> Main Sekarang</a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Game 5: Puzzle -->
+            <div class="col-md-6 col-lg-4">
+                <article class="game-card" style="--accent: #4cc9f0; --accent-soft: rgba(76, 201, 240, 0.15);">
+                    <div class="game-cover"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i></div>
+                    <div class="game-body">
+                        <h2 class="game-title">Puzzle</h2>
+                        <p class="game-desc">Susun kepingan gambar kembali ke posisi yang benar secepat mungkin.</p>
+                        <div class="game-meta">
+                            <span class="game-chip"><i class="fa-solid fa-user me-1"></i> 1 pemain</span>
+                            <span class="game-chip"><i class="fa-solid fa-hourglass-half me-1"></i> Melatih fokus</span>
+                        </div>
+                        <a href="puzzle/index.html" class="btn btn-play"><i class="fa-solid fa-play me-1"></i> Main Sekarang</a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Game 6: Sudoku -->
+            <div class="col-md-6 col-lg-4">
+                <article class="game-card" style="--accent: #ff9f1c; --accent-soft: rgba(255, 159, 28, 0.15);">
+                    <div class="game-cover"><i class="fa-solid fa-table-cells" aria-hidden="true"></i></div>
+                    <div class="game-body">
+                        <h2 class="game-title">Sudoku</h2>
+                        <p class="game-desc">Isi kotak 9x9 dengan angka 1 sampai 9 tanpa pengulangan. Ada 5 level, catatan kandidat, dan petunjuk logika.</p>
+                        <div class="game-meta">
+                            <span class="game-chip"><i class="fa-solid fa-user me-1"></i> 1 pemain</span>
+                            <span class="game-chip"><i class="fa-solid fa-signal me-1"></i> 5 level</span>
+                        </div>
+                        <a href="sudoku/index.html" class="btn btn-play"><i class="fa-solid fa-play me-1"></i> Main Sekarang</a>
+                    </div>
+                </article>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3 text-center border-top border-secondary border-opacity-10">
+        <div class="container">
+            <p>© 2026 Portofolio Developer.</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

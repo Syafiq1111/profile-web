@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembuat QR Code | Cyber Text Tools</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        body {
+            background-color: #0a0813;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .btn-back-nav {
+            margin-left: auto;
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 0.85rem;
+        }
+
+        .counter-card {
+            background: #130f24;
+            border: 2px solid rgba(157, 78, 221, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.25);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .textarea-cyber {
+            background: #0a0813;
+            border: 1px solid #9d4edd;
+            color: #f8f9fa;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            border-radius: 12px;
+            padding: 20px;
+            resize: vertical;
+            width: 100%;
+        }
+
+        .textarea-cyber:focus {
+            background: #0a0813;
+            color: #fff;
+            border-color: #c77dff;
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.4);
+            outline: none;
+        }
+
+        .field-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: #a0a0b8;
+            margin-bottom: 6px;
+        }
+
+        .select-cyber {
+            background-color: #0a0813;
+            border: 1px solid #9d4edd;
+            color: #c77dff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+
+        .select-cyber:focus {
+            background-color: #0a0813;
+            color: #fff;
+            border-color: #c77dff;
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.5);
+            outline: none;
+        }
+
+        .color-cyber {
+            width: 100%;
+            height: 42px;
+            padding: 3px;
+            background: #0a0813;
+            border: 1px solid #9d4edd;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .btn-action {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear {
+            background: rgba(255, 77, 109, 0.15);
+            border: 1px solid #ff4d6d;
+            color: #ff758f;
+        }
+
+        .btn-clear:hover {
+            background: #ff4d6d;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255, 77, 109, 0.5);
+        }
+
+        .btn-copy {
+            background: rgba(0, 245, 212, 0.15);
+            border: 1px solid #00f5d4;
+            color: #00f5d4;
+        }
+
+        .btn-copy:hover:not(:disabled) {
+            background: #00f5d4;
+            color: #0a0813;
+            box-shadow: 0 0 12px rgba(0, 245, 212, 0.5);
+        }
+
+        .btn-copy:disabled {
+            color: #00f5d4;
+            opacity: 0.35;
+        }
+
+        .btn-translate {
+            background: linear-gradient(135deg, #5a189a, #9d4edd);
+            border: 1px solid #c77dff;
+            color: #fff;
+        }
+
+        .btn-translate:hover {
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.6);
+            color: #fff;
+        }
+
+        .qr-stage {
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 8, 19, 0.6);
+            border: 1px dashed rgba(157, 78, 221, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .qr-stage.has-qr {
+            border-style: solid;
+            border-color: #c77dff;
+            box-shadow: 0 0 20px rgba(199, 125, 255, 0.3);
+        }
+
+        #qr-frame {
+            display: none;
+            padding: 16px;
+            border-radius: 12px;
+            line-height: 0;
+        }
+
+        #qr-frame canvas, #qr-frame img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .qr-empty {
+            text-align: center;
+            color: #a0a0b8;
+        }
+
+        .qr-empty i {
+            font-size: 3rem;
+            color: rgba(157, 78, 221, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .qr-hint {
+            min-height: 1.4em;
+            font-size: 0.95rem;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0813; }
+        ::-webkit-scrollbar-thumb { background: #9d4edd; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR HEADER -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="logo" style="cursor: default;">
+                <i class="fa-solid fa-gamepad"></i> PORT<span>FOLIO</span>
+            </div>
+            <a href="../index.html#features" class="btn btn-outline btn-back-nav">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="container my-auto py-5">
+
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white display-5" style="font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-qrcode text-purple"></i> PEMBUAT <span style="color: #c77dff;">QR CODE</span>
+            </h1>
+            <p class="text-white-50 fs-5">Ubah link atau teks menjadi kode QR, lalu unduh sebagai gambar PNG.</p>
+        </div>
+
+        <div class="counter-card p-4 p-md-5">
+            <div class="row g-4">
+
+                <!-- KOLOM KIRI: PENGATURAN -->
+                <div class="col-lg-6">
+                    <div class="mb-3">
+                        <label class="field-label" for="qr-input">Link atau teks:</label>
+                        <textarea id="qr-input" class="form-control textarea-cyber" style="min-height: 140px;" placeholder="Contoh: https://websitekamu.com"></textarea>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="field-label" for="qr-size">Ukuran:</label>
+                            <select id="qr-size" class="form-select select-cyber">
+                                <option value="256">256 px</option>
+                                <option value="320" selected>320 px</option>
+                                <option value="512">512 px</option>
+                                <option value="1024">1024 px</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="field-label" for="qr-level">Koreksi error:</label>
+                            <select id="qr-level" class="form-select select-cyber">
+                                <option value="L">Rendah (L)</option>
+                                <option value="M">Sedang (M)</option>
+                                <option value="Q">Tinggi (Q)</option>
+                                <option value="H" selected>Maksimal (H)</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="field-label" for="qr-fg">Warna QR:</label>
+                            <input type="color" id="qr-fg" class="color-cyber" value="#000000">
+                        </div>
+                        <div class="col-6">
+                            <label class="field-label" for="qr-bg">Warna latar:</label>
+                            <input type="color" id="qr-bg" class="color-cyber" value="#ffffff">
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-action btn-translate" id="btn-generate">
+                            <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Buat QR Code
+                        </button>
+                        <button class="btn btn-action btn-clear" id="btn-clear">
+                            <i class="fa-solid fa-trash me-1"></i> Bersihkan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KOLOM KANAN: PRATINJAU -->
+                <div class="col-lg-6">
+                    <div class="field-label">Hasil:</div>
+                    <div class="qr-stage" id="qr-stage">
+                        <div class="qr-empty" id="qr-empty">
+                            <i class="fa-solid fa-qrcode d-block"></i>
+                            Ketik link atau teks, QR code akan muncul di sini.
+                        </div>
+                        <div id="qr-frame"><div id="qr-output"></div></div>
+                    </div>
+
+                    <div class="qr-hint text-white-50 mt-2" id="qr-hint" role="status" aria-live="polite"></div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        <button class="btn btn-action btn-copy" id="btn-download" disabled>
+                            <i class="fa-solid fa-download me-1"></i> Unduh PNG
+                        </button>
+                        <button class="btn btn-action btn-copy" id="btn-copy-img" disabled>
+                            <i class="fa-solid fa-copy me-1"></i> Salin Gambar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3 text-center border-top border-secondary border-opacity-10">
+        <div class="container">
+            <p>© 2026 Portofolio Developer.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
